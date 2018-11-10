@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IAppDBContext.cs" />
+    <Compile Include="Abstract\ISqlRepository.cs" />
+    <Compile Include="Concrete\SqlRepository.cs" />
     <Compile Include="Entities\ApplicationDbContext.cs" />
     <Compile Include="Entities\BaseModel.cs" />
     <Compile Include="Entities\DBInitializer.cs" />
