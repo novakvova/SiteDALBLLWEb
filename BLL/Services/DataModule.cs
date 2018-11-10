@@ -1,6 +1,9 @@
 ﻿using Autofac;
+using BLL.Abstract;
+using BLL.Concrete;
 using BLL.Services.Identity;
 using DAL.Abstract;
+using DAL.Concrete;
 using DAL.Entities;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
@@ -43,11 +46,18 @@ namespace BLL.Services
                 .AsSelf().InstancePerRequest();
             builder.RegisterType<ApplicationSignInManager>()
                 .AsSelf().InstancePerRequest();
+
             builder.Register<IAuthenticationManager>(c => 
                 HttpContext.Current.GetOwinContext().Authentication)
                 .InstancePerRequest();
             builder.Register<IDataProtectionProvider>(c => 
                 _app.GetDataProtectionProvider()).InstancePerRequest();
+
+            builder.RegisterType<SqlRepository>()
+                .As<ISqlRepository>().InstancePerRequest();
+
+            builder.RegisterType<AccountProvider>()
+                .As<IAccountProvider>().InstancePerRequest();
 
             base.Load(builder);
         }
