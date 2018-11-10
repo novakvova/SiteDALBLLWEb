@@ -1,13 +1,17 @@
 ﻿using Autofac;
+using BLL.Services.Identity;
 using DAL.Abstract;
 using DAL.Entities;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.DataProtection;
 using Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace BLL.Services
 {
@@ -31,8 +35,19 @@ namespace BLL.Services
             }).AsSelf().InstancePerDependency();
             builder.RegisterType<CustomUserStore>()
                 .As<IUserStore<ApplicationUser, int>>().InstancePerRequest();
+            builder.RegisterType<ApplicationUserManager>()
+                .AsSelf().InstancePerRequest();
             builder.RegisterType<CustomRoleStore>()
                 .As<IRoleStore<CustomRole, int>>().InstancePerRequest();
+            builder.RegisterType<ApplicationRoleManager>()
+                .AsSelf().InstancePerRequest();
+            builder.RegisterType<ApplicationSignInManager>()
+                .AsSelf().InstancePerRequest();
+            builder.Register<IAuthenticationManager>(c => 
+                HttpContext.Current.GetOwinContext().Authentication)
+                .InstancePerRequest();
+            builder.Register<IDataProtectionProvider>(c => 
+                _app.GetDataProtectionProvider()).InstancePerRequest();
 
             base.Load(builder);
         }
